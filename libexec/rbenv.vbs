@@ -251,8 +251,8 @@ Sub CommandExecute(arg)
 End Sub
 
 Sub CommandGlobal(arg)
+    Dim ver
     If arg.Count < 2 Then  
-        Dim ver
         ver=GetCurrentVersionGlobal()
         If IsNull(ver) Then
             Wscript.echo "no global version configured"
@@ -260,11 +260,18 @@ Sub CommandGlobal(arg)
             Wscript.echo ver(0)
         End If
     Else
-        GetBinDir(arg(1))
+		ver = arg(1)
+        GetBinDir(ver)
         Dim ofile
         Set ofile = objfs.CreateTextFile( strRbenvHome & "\version" , True )
-        ofile.WriteLine(arg(1))
+        ofile.WriteLine(ver)
         ofile.Close()
+
+		WScript.Echo strRbenvHome & "\ruby -> " & strRbenvHome & "\versions\" & ver
+		Dim cmd
+		cmd = """" & strRbenvHome & "\link.bat"" """ & strRbenvHome & "\ruby"" """ & strRbenvHome & "\versions\" & ver & """"
+		'WScript.Echo cmd
+		objws.Run cmd, 0, True
     End If
 End Sub
 
